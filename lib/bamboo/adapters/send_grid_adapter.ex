@@ -140,6 +140,10 @@ defmodule Bamboo.SendGridAdapter do
     put_addresses(body, :bcc, bcc)
   end
 
+  defp put_reply_to(body, %Email{headers: %{"reply-to" => {name, address}}}) do
+    Map.put(body, :reply_to, %{name: name, email: address})
+  end
+
   defp put_reply_to(body, %Email{headers: %{"reply-to" => reply_to}}) do
     Map.put(body, :reply_to, %{email: reply_to})
   end
@@ -197,8 +201,8 @@ defmodule Bamboo.SendGridAdapter do
   end
 
   defp put_template_substitutions(body, _), do: body
-  
-  
+
+
   defp put_dynamic_template_data(body, %Email{
          private: %{send_grid_template: %{dynamic_template_data: dynamic_template_data}}
        }) do
